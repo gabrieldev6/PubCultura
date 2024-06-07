@@ -1,12 +1,43 @@
+import {useState, useEffect} from 'react'
+
 import {FaTrash, FaEdit} from "react-icons/fa";
 import ItemEditSupplier from "../../components/editSupplier";
 
-import arquivo from "../../assets/listSupplier.json"
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import appFireBase from "../../server/config";
+import { Supplier } from "../../models/supplier";
 
 
 function EditSupplier() {
-    let dados = arquivo
     
+    const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+    // passando as credenciais
+    const db = getFirestore(appFireBase);
+    // referenciando tabela
+    const userCollectionRef = collection(db, 'Suppliers');
+    
+    // recuperação dos dados
+    useEffect(()=> {
+        const getSuppliers = async () => {
+            const data = await getDocs(userCollectionRef);
+            let dados = data.docs.map(doc => { 
+                const docData = doc.data()
+                return {
+                    // id: doc.id,
+                    company: docData.company,
+                    representative: docData.representative || '',
+                    cnpj: docData.cnpj || '',
+                    stateRegistration: docData.stateRegistration || '',
+                    email: docData.email || '',
+                    phone: docData.phone || ''
+                }
+                
+            }) as Array<Supplier>;
+            // console.log(datas)
+            setSuppliers(dados);
+        }
+        getSuppliers();
+    }, []);
 
     return (
         <div className="w-full">
@@ -23,16 +54,16 @@ function EditSupplier() {
                 <FaTrash className="w-[20px] h-[20px] ml-4"/>
             </div>
             <div>
-            {dados.map((dado, index) => (
+            {suppliers.map((dado, index) => (
                 <ItemEditSupplier 
                 key={index}
                 index={index}
-                empresa={dado.Company}
-                representante={dado.Representative}
-                cnpjCpf={dado.CNPJ}
-                inscricao={dado["State Registration"]}
-                email={dado.Email}
-                telefone={dado.Phone}>
+                empresa={dado.company}
+                representante={dado.representative}
+                cnpjCpf={dado.cnpj}
+                inscricao={dado.stateRegistration}
+                email={dado.email}
+                telefone={dado.phone}>
                 
                 </ItemEditSupplier>
             ))}

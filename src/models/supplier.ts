@@ -1,19 +1,19 @@
 export class Supplier {
-    empresa: string
-    representante: string
+    company: string
+    representative: string
     cnpj: string
-    inscricao: string
+    stateRegistration: string
     email: string
-    telefone: string
+    phone: string
 
-    private constructor(empresa: string, representante: string, cnpj: string, inscricao: string, email: string, telefone: string) {
+    private constructor(company: string, representative: string, cnpj: string, stateRegistrati: string, email: string, phone: string) {
 
-        this.empresa = empresa
-        this.representante = representante
+        this.company = company
+        this.representative = representative
         this.cnpj = cnpj
-        this.inscricao = inscricao
+        this.stateRegistration = stateRegistrati
         this.email = email
-        this.telefone = telefone
+        this.phone = phone
 
 
     }
