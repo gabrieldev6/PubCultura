@@ -1,0 +1,82 @@
+[
+    {
+        "Company": "Tech Solutions Ltda.",
+        "Representative": "Ana Silva",
+        "CNPJ": "12.345.678/0001-90",
+        "State Registration": "123.456.789.012",
+        "Email": "ana@techsolutions.com",
+        "Phone": "(11) 1234-5678"
+    },
+    {
+        "Company": "MegaCorp S.A.",
+        "Representative": "João Santos",
+        "CNPJ": "98.765.432/0001-21",
+        "State Registration": "987.654.321.098",
+        "Email": "joao@megacorp.com",
+        "Phone": "(21) 9876-5432"
+    },
+    {
+        "Company": "Global Trade Ltda.",
+        "Representative": "Maria Oliveira",
+        "CNPJ": "54.321.098/0001-76",
+        "State Registration": "543.210.987.654",
+        "Email": "maria@globaltrade.com",
+        "Phone": "(31) 5432-1098"
+    },
+    {
+        "Company": "Bright Ideas Inc.",
+        "Representative": "Pedro Costa",
+        "CNPJ": "87.654.321/0001-34",
+        "State Registration": "876.543.210.987",
+        "Email": "pedro@brightideas.com",
+        "Phone": "(41) 8765-4321"
+    },
+    {
+        "Company": "Prime Solutions Ltda.",
+        "Representative": "Carolina Martins",
+        "CNPJ": "65.432.109/0001-52",
+        "State Registration": "654.321.098.765",
+        "Email": "carolina@primesolutions.com",
+        "Phone": "(51) 6543-2109"
+    },
+    {
+        "Company": "Alpha Technologies S.A.",
+        "Representative": "Lucas Pereira",
+        "CNPJ": "23.456.789/0001-83",
+        "State Registration": "234.567.890.123",
+        "Email": "lucas@alphatech.com",
+        "Phone": "(61) 2345-6789"
+    },
+    {
+        "Company": "Future Innovations Ltda.",
+        "Representative": "Fernanda Lima",
+        "CNPJ": "76.543.210/0001-45",
+        "State Registration": "765.432.109.876",
+        "Email": "fernanda@futureinnovations.com",
+        "Phone": "(71) 7654-3210"
+    },
+    {
+        "Company": "Smart Solutions Inc.",
+        "Representative": "Bruno Almeida",
+        "CNPJ": "34.567.890/0001-29",
+        "State Registration": "345.678.901.234",
+        "Email": "bruno@smartsolutions.com",
+        "Phone": "(81) 3456-7890"
+    },
+    {
+        "Company": "Optimum Services Ltda.",
+        "Representative": "Juliana Ramos",
+        "CNPJ": "21.098.765/0001-67",
+        "State Registration": "210.987.654.321",
+        "Email": "juliana@optimumservices.com",
+        "Phone": "(91) 2109-8765"
+    },
+    {
+        "Company": "Dynamic Solutions S.A.",
+        "Representative": "Rafaela Sousa",
+        "CNPJ": "45.678.901/0001-38",
+        "State Registration": "456.789.012.345",
+        "Email": "rafaela@dynamicsolutions.com",
+        "Phone": "(01) 4567-8901"
+    }
+]
