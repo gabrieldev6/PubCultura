@@ -1,4 +1,5 @@
 export class Supplier {
+    id: string | null
     company: string
     representative: string
     cnpj: string
@@ -6,8 +7,8 @@ export class Supplier {
     email: string
     phone: string
 
-    private constructor(company: string, representative: string, cnpj: string, stateRegistrati: string, email: string, phone: string) {
-
+    private constructor(id: string | null, company: string, representative: string, cnpj: string, stateRegistrati: string, email: string, phone: string) {
+        this.id = id
         this.company = company
         this.representative = representative
         this.cnpj = cnpj
@@ -17,9 +18,9 @@ export class Supplier {
 
 
     }
-    static create(empresa: string, representante: string, cnpj: string, inscricao: string, email: string, telefone: string) {
+    static create(id: string | null, empresa: string, representante: string, cnpj: string, inscricao: string, email: string, telefone: string) {
         if (this.validateEmail(email) && this.validateCNPJ(cnpj) ) {
-            return new Supplier(empresa, representante, cnpj, inscricao, email, telefone)
+            return new Supplier(id, empresa, representante, cnpj, inscricao, email, telefone)
         }
 
 
@@ -81,6 +82,7 @@ export class Supplier {
         return this.cnpj
     }
 
+    
     public getStateRegistration() : string {
         return this.stateRegistration
     }

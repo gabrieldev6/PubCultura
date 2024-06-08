@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Supplier } from '../../models/supplier'
 
 import { FaExclamationCircle } from "react-icons/fa";
 
 
-import arquivo from "../../assets/listSupplier.json"
 
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDoc, doc } from 'firebase/firestore';
 import appFireBase from "../../server/config";
+
 function Form() {
 
     const [company, setCompany] = useState('')
@@ -18,7 +18,38 @@ function Form() {
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [warning, setWarning] = useState(false)
+    let {state} = useLocation()
+    console.log('props form')
+    console.log(state.key)
+    
+    useEffect(() => {
 
+        const fetchSupplier = async () => {
+            
+            const db = getFirestore(appFireBase);
+            const userCollectionRef = doc(db, 'Suppliers', state.key)
+            
+
+            const docSnap = await getDoc(userCollectionRef);
+            
+
+            if (docSnap.exists()) {
+                const {company, representative, cnpj, stateRegistration, email, phone} = docSnap.data()
+                setCompany(company)
+                setRepresentative(representative)
+                setCnpj(cnpj)
+                setStateRegistration(stateRegistration)
+                setEmail(email)
+                setPhone(phone)
+            } else {
+                console.log("sem documento")
+            }
+
+            // console.log("algo deu errado")
+
+        }
+        fetchSupplier()
+    })
 
 
     const getCompany = (event: any) => {
@@ -45,20 +76,20 @@ function Form() {
         setPhone(event.target.value)
         // console.log(telephone)
     }
-    
+
     const submitSupplier = async () => {
         // validacao dos valores
-        const supplier = Supplier.create(company, representative, cnpj, stateRegistration, email, phone)
-        
-        
+        const supplier = Supplier.create(null, company, representative, cnpj, stateRegistration, email, phone,)
+
+
         // passando as credenciais
         const db = getFirestore(appFireBase);
-        
+
         // referenciando tabela
         const userCollectionRef = collection(db, 'Suppliers');
-        
+
         // add ao banco de dados
-        
+
         if (!supplier) {
             setWarning(true)
 
@@ -74,17 +105,17 @@ function Form() {
 
 
     }
-    const getState = () => {
-        let { state } = useLocation()
+    // const getState = () => {
+    //     let { state } = useLocation()
 
-        if (state) {
-            let itemSupplier = arquivo[state.index]
-            console.log(itemSupplier)
+    //     if (state) {
+    //         let itemSupplier = arquivo[state.index]
+    //         // console.log(itemSupplier)
 
-        }
-    }
+    //     }
+    // }
 
-    getState()
+    // getState()
 
 
 
@@ -93,25 +124,25 @@ function Form() {
             <ul className='w-full'>
                 <li className="w-full">
                     <div className="w-full font-sans relative my-4">
-                        <input value={company} onChange={getCompany} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" autoComplete="off" />
+                        <input onChange={getCompany} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Empresa</label>
                     </div>
                 </li>
                 <li>
                     <div className="font-sans relative my-4">
-                        <input value={representative} onChange={getRepresentative} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input  onChange={getRepresentative} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Representante</label>
                     </div>
                 </li>
                 <li>
                     <div className="font-sans  relative my-4">
-                        <input value={cnpj} onChange={getCnpj} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input onChange={getCnpj} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">CNPJ</label>
                     </div>
                 </li>
                 <li>
                     <div className="font-sans relative my-4">
-                        <input value={stateRegistration} onChange={getEnrollment} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input onChange={getEnrollment} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Inscrição Estadual</label>
                     </div>
                 </li>
@@ -119,11 +150,11 @@ function Form() {
                 <li className='flex'>
 
                     <div className="w-full font-sans max-w-xs relative my-4 pr-5">
-                        <input value={email} onChange={getEmail} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input onChange={getEmail} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Email</label>
                     </div>
                     <div className="w-full font-sans max-w-xs relative my-4">
-                        <input value={phone} onChange={getTelephone} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input onChange={getTelephone} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Telefone</label>
                     </div>
 

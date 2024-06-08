@@ -23,7 +23,7 @@ function ListSupplier() {
             let dados = data.docs.map(doc => { 
                 const docData = doc.data()
                 return {
-                    // id: doc.id,
+                    id: doc.id,
                     company: docData.company,
                     representative: docData.representative || '',
                     cnpj: docData.cnpj || '',
@@ -33,7 +33,7 @@ function ListSupplier() {
                 }
                 
             }) as Array<Supplier>;
-            // console.log(datas)
+            
             setSuppliers(dados);
         }
         getSuppliers();
@@ -52,9 +52,9 @@ function ListSupplier() {
                 <p className="font-bold  w-32">Telefone</p>
 
             </div>
-            {suppliers.map((dado, index) => (
+            {suppliers.map((dado) => (
                 <ItemSupplier
-                    key={index}
+                    key={dado.id}
                     company={dado.company}
                     representative={dado.representative}
                     cnpj={dado.cnpj}

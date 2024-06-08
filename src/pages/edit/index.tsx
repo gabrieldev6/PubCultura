@@ -23,7 +23,7 @@ function EditSupplier() {
             let dados = data.docs.map(doc => { 
                 const docData = doc.data()
                 return {
-                    // id: doc.id,
+                    id: doc.id,
                     company: docData.company,
                     representative: docData.representative || '',
                     cnpj: docData.cnpj || '',
@@ -33,7 +33,7 @@ function EditSupplier() {
                 }
                 
             }) as Array<Supplier>;
-            // console.log(datas)
+            console.log(dados[0].id)
             setSuppliers(dados);
         }
         getSuppliers();
@@ -57,7 +57,7 @@ function EditSupplier() {
             {suppliers.map((dado, index) => (
                 <ItemEditSupplier 
                 key={index}
-                index={index}
+                id={dado.id}
                 company={dado.company}
                 representative={dado.representative}
                 cnpj={dado.cnpj}
