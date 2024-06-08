@@ -1,25 +1,26 @@
 import { useState } from 'react'
-import {useLocation} from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { Supplier } from '../../models/supplier'
 
-import {FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 
 
 import arquivo from "../../assets/listSupplier.json"
+
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import appFireBase from "../../server/config";
 function Form() {
-    
-    
 
     const [company, setCompany] = useState('')
     const [representative, setRepresentative] = useState('')
-    const [cnpjcpf, setCnpjcpf] = useState('')
-    const [enrollment, setEnrollment] = useState('')
+    const [cnpj, setCnpj] = useState('')
+    const [stateRegistration, setStateRegistration] = useState('')
     const [email, setEmail] = useState('')
-    const [telephone, setTelephone] = useState('')
+    const [phone, setPhone] = useState('')
     const [warning, setWarning] = useState(false)
-    
-    
-    
+
+
+
     const getCompany = (event: any) => {
         setCompany(event.target.value)
         // console.log(company)
@@ -29,11 +30,11 @@ function Form() {
         // console.log(representative)
     }
     const getCnpj = (event: any) => {
-        setCnpjcpf(event.target.value)
+        setCnpj(event.target.value)
         // console.log(cnpjcpf)
     }
     const getEnrollment = (event: any) => {
-        setEnrollment(event.target.value)
+        setStateRegistration(event.target.value)
         // console.log(enrollment)
     }
     const getEmail = (event: any) => {
@@ -41,32 +42,48 @@ function Form() {
         // console.log(email)
     }
     const getTelephone = (event: any) => {
-        setTelephone(event.target.value)
+        setPhone(event.target.value)
         // console.log(telephone)
     }
-
-    const submitSupplier = (event: any) => {
-        console.log(event)
-        const supplier = Supplier.create(company, representative, cnpjcpf, enrollment, email, telephone)
-        console.log(supplier)
-        if (typeof supplier === 'string') {
+    
+    const submitSupplier = async () => {
+        // validacao dos valores
+        const supplier = Supplier.create(company, representative, cnpj, stateRegistration, email, phone)
+        
+        
+        // passando as credenciais
+        const db = getFirestore(appFireBase);
+        
+        // referenciando tabela
+        const userCollectionRef = collection(db, 'Suppliers');
+        
+        // add ao banco de dados
+        
+        if (!supplier) {
             setWarning(true)
+
         } else {
+
+            // cria novo valor
+            const reciver = await addDoc(userCollectionRef, {
+                company, representative, cnpj, stateRegistration, email, phone
+            })
+            console.log(reciver)
             setWarning(false)
         }
-        
-        // console.log(supplier)
+
+
     }
     const getState = () => {
-        let {state} = useLocation()
+        let { state } = useLocation()
 
-        if(state) {
+        if (state) {
             let itemSupplier = arquivo[state.index]
             console.log(itemSupplier)
-            
-        } 
+
+        }
     }
-    
+
     getState()
 
 
@@ -82,19 +99,19 @@ function Form() {
                 </li>
                 <li>
                     <div className="font-sans relative my-4">
-                        <input onChange={getRepresentative} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={representative} onChange={getRepresentative} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Representante</label>
                     </div>
                 </li>
                 <li>
                     <div className="font-sans  relative my-4">
-                        <input onChange={getCnpj} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={cnpj} onChange={getCnpj} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">CNPJ</label>
                     </div>
                 </li>
                 <li>
                     <div className="font-sans relative my-4">
-                        <input onChange={getEnrollment} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={stateRegistration} onChange={getEnrollment} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Inscrição Estadual</label>
                     </div>
                 </li>
@@ -102,11 +119,11 @@ function Form() {
                 <li className='flex'>
 
                     <div className="w-full font-sans max-w-xs relative my-4 pr-5">
-                        <input onChange={getEmail} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={email} onChange={getEmail} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Email</label>
                     </div>
                     <div className="w-full font-sans max-w-xs relative my-4">
-                        <input onChange={getTelephone} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={phone} onChange={getTelephone} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Telefone</label>
                     </div>
 
@@ -115,7 +132,7 @@ function Form() {
                 <li><button onClick={submitSupplier} className='w-full px-8 py-3 rounded-full bg-blue-500 text-white font-bold  hover:bg-blue-300 hover:shadow-lg active:bg-blue-700 active:transition-none active:shadow-none active:scale-95'>
                     Cadastrar
                 </button></li>
-                {warning ? <li className='flex items-center p-2'><FaExclamationCircle className='text-red-500 mr-2'/><p className='text-red-500 font-semibold'> Um ou mais campos foi preenchido incorretamente.</p></li> : <li><p></p></li>}
+                {warning ? <li className='flex items-center p-2'><FaExclamationCircle className='text-red-500 mr-2' /><p className='text-red-500 font-semibold'> Um ou mais campos foram preenchidos de forma incorreta.</p></li> : <li><p></p></li>}
 
 
             </ul>

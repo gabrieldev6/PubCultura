@@ -58,12 +58,12 @@ function EditSupplier() {
                 <ItemEditSupplier 
                 key={index}
                 index={index}
-                empresa={dado.company}
-                representante={dado.representative}
-                cnpjCpf={dado.cnpj}
-                inscricao={dado.stateRegistration}
+                company={dado.company}
+                representative={dado.representative}
+                cnpj={dado.cnpj}
+                stateRegistration={dado.stateRegistration}
                 email={dado.email}
-                telefone={dado.phone}>
+                phone={dado.phone}>
                 
                 </ItemEditSupplier>
             ))}

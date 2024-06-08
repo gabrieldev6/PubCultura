@@ -20,8 +20,6 @@ export class Supplier {
     static create(empresa: string, representante: string, cnpj: string, inscricao: string, email: string, telefone: string) {
         if (this.validateEmail(email) && this.validateCNPJ(cnpj) ) {
             return new Supplier(empresa, representante, cnpj, inscricao, email, telefone)
-        } else {
-            return "um ou mais campos foram preenchidos de forma indevida"
         }
 
 
@@ -69,4 +67,35 @@ export class Supplier {
 
         return true;
     }
+
+    
+    public getCompany() : string {
+        return this.company
+    }
+    
+    public getRepresentative() : string {
+        return this.representative
+    }
+    
+    public getCnpj() : string {
+        return this.cnpj
+    }
+
+    public getStateRegistration() : string {
+        return this.stateRegistration
+    }
+    
+    public getEmail() : string {
+        return this.email
+    }
+    
+    public getPhone() : string {
+        return this.phone
+    }
+    
+    
+    
+    
+    
+    
 }
