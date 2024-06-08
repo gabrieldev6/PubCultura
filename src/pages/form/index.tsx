@@ -2,39 +2,45 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Supplier } from '../../models/supplier'
 
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
 
 
 
-import { getFirestore, collection, addDoc, getDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDoc, doc, updateDoc } from 'firebase/firestore';
 import appFireBase from "../../server/config";
 
 function Form() {
 
-    const [company, setCompany] = useState('')
-    const [representative, setRepresentative] = useState('')
-    const [cnpj, setCnpj] = useState('')
-    const [stateRegistration, setStateRegistration] = useState('')
-    const [email, setEmail] = useState('')
-    const [phone, setPhone] = useState('')
-    const [warning, setWarning] = useState(false)
-    let {state} = useLocation()
-    console.log('props form')
-    console.log(state.key)
+    let [company, setCompany] = useState('')
+    let [representative, setRepresentative] = useState('')
+    let [cnpj, setCnpj] = useState('')
+    let [stateRegistration, setStateRegistration] = useState('')
+    let [email, setEmail] = useState('')
+    let [phone, setPhone] = useState('')
+    let [warning, setWarning] = useState(false)
+    let [createSucess, setCreateSucess] = useState(false)
+    let [updateSucess, setUpdateSucess] = useState(false)
+    let [updateOrRegister, setUpdateOrRegister] = useState(true)
+    let { state } = useLocation()
     
+    // vai receber os dados de editSupplier para serem alterados
     useEffect(() => {
-
+        
         const fetchSupplier = async () => {
-            
+            if (state.key) {
+                setUpdateOrRegister(false)
+    
+            }
             const db = getFirestore(appFireBase);
             const userCollectionRef = doc(db, 'Suppliers', state.key)
-            
+
 
             const docSnap = await getDoc(userCollectionRef);
-            
+
 
             if (docSnap.exists()) {
-                const {company, representative, cnpj, stateRegistration, email, phone} = docSnap.data()
+                const { company, representative, cnpj, stateRegistration, email, phone } = docSnap.data()
+
                 setCompany(company)
                 setRepresentative(representative)
                 setCnpj(cnpj)
@@ -49,7 +55,7 @@ function Form() {
 
         }
         fetchSupplier()
-    })
+    }, [])
 
 
     const getCompany = (event: any) => {
@@ -78,45 +84,46 @@ function Form() {
     }
 
     const submitSupplier = async () => {
-        // validacao dos valores
-        const supplier = Supplier.create(null, company, representative, cnpj, stateRegistration, email, phone,)
+        
+
+            // validacao dos valores
+            const supplier = Supplier.create(null, company, representative, cnpj, stateRegistration, email, phone)
+
+            // passando as credenciais
+            const db = getFirestore(appFireBase);
+
+            // referenciando tabela
+            const userCollectionRef = collection(db, 'Suppliers');
 
 
-        // passando as credenciais
-        const db = getFirestore(appFireBase);
+            if (!supplier) {
+                // apresenta uma mensagem de erro caso a validação esteja errada
+                setWarning(true)
 
-        // referenciando tabela
-        const userCollectionRef = collection(db, 'Suppliers');
+            } else {
 
-        // add ao banco de dados
+                // cria novo valor
+                const reciver = await addDoc(userCollectionRef, {
+                    company, representative, cnpj, stateRegistration, email, phone
+                })
+                console.log(reciver)
+                setWarning(false)
+                setCreateSucess(true)
+            }
+        
 
-        if (!supplier) {
-            setWarning(true)
-
-        } else {
-
-            // cria novo valor
-            const reciver = await addDoc(userCollectionRef, {
-                company, representative, cnpj, stateRegistration, email, phone
-            })
-            console.log(reciver)
-            setWarning(false)
-        }
 
 
     }
-    // const getState = () => {
-    //     let { state } = useLocation()
 
-    //     if (state) {
-    //         let itemSupplier = arquivo[state.index]
-    //         // console.log(itemSupplier)
-
-    //     }
-    // }
-
-    // getState()
-
+    const UpdateSubmit = async () => {
+            const db = getFirestore(appFireBase);
+            const docRef = doc(db, 'Suppliers', state.key)
+            let result = await updateDoc(docRef, {company, representative, cnpj, stateRegistration, email, phone})
+            console.log('userCollectionRef')
+            console.log(result)
+            setUpdateSucess(true)
+    }
 
 
     return (
@@ -124,25 +131,25 @@ function Form() {
             <ul className='w-full'>
                 <li className="w-full">
                     <div className="w-full font-sans relative my-4">
-                        <input onChange={getCompany} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" autoComplete="off" />
+                        <input value={company} onChange={getCompany} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Empresa</label>
                     </div>
                 </li>
                 <li>
                     <div className="font-sans relative my-4">
-                        <input  onChange={getRepresentative} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={representative} onChange={getRepresentative} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Representante</label>
                     </div>
                 </li>
                 <li>
                     <div className="font-sans  relative my-4">
-                        <input onChange={getCnpj} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={cnpj} onChange={getCnpj} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">CNPJ</label>
                     </div>
                 </li>
                 <li>
                     <div className="font-sans relative my-4">
-                        <input onChange={getEnrollment} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={stateRegistration} onChange={getEnrollment} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Inscrição Estadual</label>
                     </div>
                 </li>
@@ -150,22 +157,25 @@ function Form() {
                 <li className='flex'>
 
                     <div className="w-full font-sans max-w-xs relative my-4 pr-5">
-                        <input onChange={getEmail} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={email} onChange={getEmail} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Email</label>
                     </div>
                     <div className="w-full font-sans max-w-xs relative my-4">
-                        <input onChange={getTelephone} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
+                        <input value={phone} onChange={getTelephone} className='w-full p-3 text-base border-2 border-gray-400 rounded-2xl bg-black bg-opacity-10 outline-none transition focus:border-gray-200 peer' type="text" required={true} autoComplete="off" />
                         <label className='absolute left-0 p-3 text-base text-gray-600  translate-y-[-17px] scale-90 ml-5 px-3 py-1 bg-gray-100 rounded-2xl ' htmlFor="name">Telefone</label>
                     </div>
 
                 </li>
 
-                <li><button onClick={submitSupplier} className='w-full px-8 py-3 rounded-full bg-blue-500 text-white font-bold  hover:bg-blue-300 hover:shadow-lg active:bg-blue-700 active:transition-none active:shadow-none active:scale-95'>
+                {updateOrRegister?<li><button onClick={submitSupplier} className='w-full px-8 py-3 my-5 rounded-full bg-blue-500 text-white font-bold  hover:bg-blue-300 hover:shadow-lg active:bg-blue-700 active:transition-none active:shadow-none active:scale-95'>
                     Cadastrar
-                </button></li>
+                </button></li>:
+                <li><button onClick={UpdateSubmit} className='w-full px-8 py-3 my-5 rounded-full bg-blue-500 text-white font-bold  hover:bg-blue-300 hover:shadow-lg active:bg-blue-700 active:transition-none active:shadow-none active:scale-95'>
+                    Atualizar
+                </button></li>}
                 {warning ? <li className='flex items-center p-2'><FaExclamationCircle className='text-red-500 mr-2' /><p className='text-red-500 font-semibold'> Um ou mais campos foram preenchidos de forma incorreta.</p></li> : <li><p></p></li>}
-
-
+                {updateSucess ? <li className='flex items-center p-2'><FaCheckCircle className='text-green-600 mr-2' /><p className='text-green-600 font-semibold'>Alteração feita com sucesso.</p></li>: <li><p></p></li>}
+                {createSucess ? <li className='flex items-center p-2'><FaCheckCircle className='text-green-600 mr-2' /><p className='text-green-600 font-semibold'>Novo fornecedor cadastrado com sucesso.</p></li>: <li><p></p></li>}
             </ul>
 
 

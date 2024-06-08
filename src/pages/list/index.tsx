@@ -33,7 +33,7 @@ function ListSupplier() {
                 }
                 
             }) as Array<Supplier>;
-            
+            // console.log(datas)
             setSuppliers(dados);
         }
         getSuppliers();
