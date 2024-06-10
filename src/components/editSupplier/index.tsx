@@ -18,7 +18,7 @@ function ItemEditSupplier(props: any) {
             const db = getFirestore(appFireBase);
             const docRef = doc(db, 'Suppliers', props.id);
             await deleteDoc(docRef);
-            console.log('apagou')
+            
 
         } catch (err) {
             console.log("erro: " + err)
