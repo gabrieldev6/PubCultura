@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 import ItemSupplier from "../../components/itemSupplier";
-// import arquivo from "../../assets/listSupplier.json";
+
 
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import appFireBase from "../../server/config";
-import { Supplier } from "../../models/supplier";
+import Supplier from "../../models/supplier";
 
 
 function ListSupplier() {
@@ -21,7 +21,7 @@ function ListSupplier() {
         const getSuppliers = async () => {
             const data = await getDocs(userCollectionRef);
             let dados = data.docs.map(doc => { 
-                const docData = doc.data()
+                const docData = doc.data();
                 return {
                     id: doc.id,
                     company: docData.company,
@@ -33,10 +33,10 @@ function ListSupplier() {
                 }
                 
             }) as Array<Supplier>;
-            // console.log(datas)
             setSuppliers(dados);
         }
         getSuppliers();
+
     }, []);
 
 

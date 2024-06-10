@@ -5,7 +5,7 @@ import ItemEditSupplier from "../../components/editSupplier";
 
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import appFireBase from "../../server/config";
-import { Supplier } from "../../models/supplier";
+import Supplier from "../../models/supplier";
 
 
 function EditSupplier() {

@@ -1,22 +1,22 @@
 import err from "./err"
 
-export class Supplier {
-    id: string | null
-    company: string
-    representative: string
-    cnpj: string
-    stateRegistration: string
-    email: string
-    phone: string
+export default class Supplier {
+    id: string | null;
+    company: string;
+    representative: string;
+    cnpj: string;
+    stateRegistration: string;
+    email: string;
+    phone: string;
 
     private constructor(id: string | null, company: string, representative: string, cnpj: string, stateRegistrati: string, email: string, phone: string) {
-        this.id = id
-        this.company = company
-        this.representative = representative
-        this.cnpj = cnpj
-        this.stateRegistration = stateRegistrati
-        this.email = email
-        this.phone = phone
+        this.id = id;
+        this.company = company;
+        this.representative = representative;
+        this.cnpj = cnpj;
+        this.stateRegistration = stateRegistrati;
+        this.email = email;
+        this.phone = phone;
 
 
     }
@@ -25,35 +25,35 @@ export class Supplier {
         const err = this.validate(company, representative, cnpj, stateRegistration, email, phone)
 
         if (!err.err) {
-            return new Supplier(id, company, representative, cnpj, stateRegistration, email, phone)
+            return new Supplier(id, company, representative, cnpj, stateRegistration, email, phone);
 
         } else {
-            return err
+            return err;
         }
 
 
     }
     private static validate(company: string, representative: string, cnpj: string, stateRegistration: string, email: string, phone: string) {
         if (company.length >= 50) {
-            return new err(true, 'O nome da empresa ultrapassa o limite.')
+            return new err(true, 'O nome da empresa ultrapassa o limite.');
 
         } else if (representative.length >= 50) {
-            return new err(true, 'O nome do representante ultrapassa o limite.')
+            return new err(true, 'O nome do representante ultrapassa o limite.');
 
         } else if (stateRegistration.length >= 50) {
-            return new err(true, 'A inscrição estadual é invalida.')
+            return new err(true, 'A inscrição estadual é invalida.');
 
         } else if (phone.length >= 20) {
-            return new err(true, 'Este numero é invalido, tente novamente com um número valido.')
+            return new err(true, 'Este numero é invalido, tente novamente com um número valido.');
 
         } else if (!this.validateCNPJ(cnpj)) {
-            return new err(true, 'O CNPJ é invalido, teste novamente com um CNPJ valido.')
+            return new err(true, 'O CNPJ é invalido, teste novamente com um CNPJ valido.');
 
         } else if (!this.validateEmail(email)) {
-            return new err(true, 'Este email não é valido.')       
+            return new err(true, 'Este email não é valido.');
             
         }
-        return new err(false, '')  
+        return new err(false, '');
     }
     private static validateCNPJ(cnpj: string) {
         cnpj = cnpj.replace(/[^\d]+/g, '');
@@ -105,32 +105,27 @@ export class Supplier {
 
 
     public getCompany(): string {
-        return this.company
+        return this.company;
     }
 
     public getRepresentative(): string {
-        return this.representative
+        return this.representative;
     }
 
     public getCnpj(): string {
-        return this.cnpj
+        return this.cnpj;
     }
 
     public getStateRegistration(): string {
-        return this.stateRegistration
+        return this.stateRegistration;
     }
 
     public getEmail(): string {
-        return this.email
+        return this.email;
     }
 
     public getPhone(): string {
-        return this.phone
+        return this.phone;
     }
-
-
-
-
-
 
 }

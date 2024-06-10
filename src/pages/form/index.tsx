@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Supplier } from '../../models/supplier';
-import  err  from '../../models/err';
+import  Supplier from '../../models/supplier';
+import  Err  from '../../models/err';
 import { FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
 
 
@@ -90,14 +90,10 @@ function Form() {
         // validacao dos valores
         const supplier = Supplier.create(null, company, representative, cnpj, stateRegistration, email, phone);
 
-        console.log(supplier)
-
-
-
-        if (supplier instanceof err) {
+        if (supplier instanceof Err) {
             // apresenta uma mensagem de erro caso a validação esteja errada
             setWarning(true);
-            
+
             setCreateSucess(false);
             setStatus(supplier.status);
         } else if(supplier instanceof Supplier) {
@@ -110,9 +106,10 @@ function Form() {
             // cria novo valor
             await addDoc(userCollectionRef, {
                 company, representative, cnpj, stateRegistration, email, phone
-            })
-            setWarning(false)
-            setCreateSucess(true)
+            });
+
+            setWarning(false);
+            setCreateSucess(true);
         }
 
 
@@ -122,11 +119,10 @@ function Form() {
 
     const UpdateSubmit = async () => {
         const db = getFirestore(appFireBase);
-        const docRef = doc(db, 'Suppliers', state.key)
-        let result = await updateDoc(docRef, { company, representative, cnpj, stateRegistration, email, phone })
-        console.log('userCollectionRef')
-        console.log(result)
-        setUpdateSucess(true)
+        const docRef = doc(db, 'Suppliers', state.key);
+        await updateDoc(docRef, { company, representative, cnpj, stateRegistration, email, phone });
+        
+        setUpdateSucess(true);
     }
 
 
